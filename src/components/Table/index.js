@@ -45,7 +45,6 @@ export default {
       pageSize: this.pageSize,
       showSizeChanger: this.showSizeChanger
     }) || false
-    console.log(this.localPagination)
     this.loadData()
   },
   methods: {

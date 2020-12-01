@@ -1,182 +1,115 @@
 <template>
   <page-header-wrapper :title="false">
-    <a-card title="系统信息设置">
-      <a-descriptions>
-        <a-descriptions-item
-          v-for="(i,index) in system"
-          :key="index"
-          :label="i.title">
-          {{ i.value }}
-        </a-descriptions-item>
-      </a-descriptions>
+    <a-card>
+      <div class="head">
+        <a-button type="primary" @click="$refs.Add.Add(validatorNames)">添加部门</a-button>
+      </div>
+      <m-table
+        style="margin-top:10px;"
+        ref="table"
+        :columns="columns"
+        rowKey="id"
+        :data="loadData">
+        <template
+          slot-scope="item,record"
+          slot="Action">
+          <a-button
+            @click="$refs.Edit.Edit(record,validatorNames)"
+            type="primary"
+            style="margin-right:15px;"
+            size="small">修改</a-button>
+          <a-button
+            @click="Delete(record)"
+            type="danger"
+            size="small">删除</a-button>
+        </template>
+      </m-table>
     </a-card>
-    <br>
-    <a-card title="云桌面许可证">
-      <a-descriptions>
-        <a-descriptions-item
-          v-for="(i,index) in License"
-          :key="index"
-          :label="i.title">
-          {{ i.value }}
-        </a-descriptions-item>
-      </a-descriptions>
-    </a-card>
-    <br>
-    <a-card title="许可信息">
-      <a-descriptions>
-        <a-descriptions-item
-          v-for="(i,index) in LicenseInfo"
-          :key="index"
-          :label="i.title">
-          {{ i.value }}
-        </a-descriptions-item>
-      </a-descriptions>
-    </a-card>
+    <add ref="Add" @ok="handleOk"/>
+    <edit ref="Edit" @ok="handleOk"/>
   </page-header-wrapper>
 </template>
 
 <script>
-import { systemAboutUs } from '@/api/system/About'
+import { deepGet } from '@/utils/util'
+import { MTable, Ellipsis, MIcon } from '@/components'
+import Add from './module/Add.vue'
+import Edit from './module/Edit.vue'
+import { mixinTable } from '@/utils/mixin'
+import { departmentList, departmentDelete } from '@/api/system/Department'
 export default {
+    components: {
+		Add,
+		Edit,
+        MIcon,
+        MTable,
+        Ellipsis
+    },
+    mixins: [mixinTable],
     data () {
         return {
-            system: [
+			validatorNames: [],
+            columns: [
                 {
-                    key: 'siteName',
-                    title: '站点名称',
-                    value: ''
+					key: 'id',
+                    dataIndex: 'id',
+					title: 'id'
                 },
                 {
-                    key: 'company',
-                    title: '公司名称',
-                    value: ''
+                    dataIndex: 'name',
+                    title: '名称'
                 },
                 {
-                    key: 'os',
-                    title: '操作系统',
-                    value: ''
+                    dataIndex: 'description',
+                    title: '部门介绍'
                 },
                 {
-                    key: '',
-                    title: '服务器名称',
-                    value: ''
+                    dataIndex: 'created',
+					title: '创建时间',
+                    scopedSlots: { customRender: 'time' }
                 },
                 {
-                    key: 'ip',
-                    title: '服务器IP',
-                    value: ''
-                },
-                {
-                    key: 'port',
-                    title: '服务器端口',
-                    value: ''
-                },
-                {
-                    key: '',
-                    title: 'ISS环境',
-                    value: ''
-                },
-                {
-                    key: 'path',
-                    title: '目录物理路径',
-                    value: ''
-                },
-                {
-                    key: '',
-                    title: 'WEB版本',
-                    value: '0.0.1'
-                },
-                {
-                    key: 'backVersion',
-                    title: '后台版本',
-                    value: ''
+					title: '操作',
+                    scopedSlots: { customRender: 'Action' }
                 }
             ],
-            License: [
-                {
-                    key: 'productName',
-                    title: '产品名称',
-                    value: ''
-                },
-                {
-                    key: 'num',
-                    title: '可用数目',
-                    value: ''
+            loadData: async parameter => {
+                try {
+					this.validatorNames = deepGet(deepGet(await departmentList(), 'data', []), 'departments', [])
+                  return {
+					data: this.validatorNames
+				}
+                } catch (error) {
+                    return false
                 }
-            ],
-            LicenseInfo: [
-                {
-                    key: 'userId',
-                    title: '用户ID',
-                    value: ''
-                },
-                {
-                    key: 'registerType',
-                    title: '注册类型',
-                    value: ''
-                },
-                {
-                    key: 'registerTime',
-                    title: '注册日期',
-                    value: ''
-                },
-                {
-                    key: 'registerCompany',
-                    title: '单位名称',
-                    value: ''
-                },
-                {
-                    key: 'software',
-                    title: '授权软件',
-                    value: ''
-                }
-            ]
+            }
         }
     },
     created () {
-        systemAboutUs().then(res => {
-            this.system.forEach(u => {
-                for (const i in res) {
-                    if (u.key === i) {
-                        u.value = res[i]
-                    }
-                }
-            })
-            this.License.forEach(u => {
-                for (const i in res) {
-                    if (u.key === i) {
-                        u.value = res[i]
-                    }
-                }
-            })
-            this.LicenseInfo.forEach(u => {
-                for (const i in res) {
-                    if (u.key === i) {
-                        u.value = res[i]
-                    }
-                }
-            })
-        })
     },
-    methods: {}
+    methods: {
+		Delete (i) {
+			this.$confirm({
+                title: '确认要删除' + i.name + '吗？',
+                content: '点击确定即可删除',
+                okType: 'danger',
+                onOk: async () => {
+                    try {
+						await departmentDelete({ id: i.id })
+						this.$message.success('删除成功')
+						this.$refs.table.refresh()
+					} catch (error) {
+						this.$message.error('删除失败')
+					}
+                }
+            })
+		}
+	}
 }
 </script>
 
 <style lang="less" scoped>
-/deep/.ant-card-head {
-    color: white;
-    font-size: 20px;
-}
-/deep/.ant-descriptions-item-label {
-    color: white;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 1.5;
-}
-/deep/.ant-descriptions-item-content {
-    // display: table-cell;
-    color: white;
-    font-size: 16px;
-    line-height: 1.5;
+.icon{
+    font-size: 40px;
 }
 </style>

@@ -1,0 +1,187 @@
+syntax = "proto3";
+
+package license.v1;
+
+option go_package="rpc/license/v1;license_v1";
+
+// protoc --go_out=. --twirp_out=option_prefix=casbin,validate_enable=true:. rpc/system/v1/lb.proto
+// 灵备cdm相关授权
+service Lb {
+    // 这里的行尾注释 casbin:rule 用于验证接口权限格式为module-object-action(模块-对象-操作)
+    //
+    // List 获取列表
+    rpc List(LbListReq) returns (LbListResp); // casbin:license-lb-list
+	// Get 获取详情
+    rpc Get(LbGetReq) returns (LbGetResp); // casbin:license-lb-get
+	// Add 添加
+    rpc Add(LbAddReq) returns (LbAddResp);  // casbin:license-lb-add
+    // Delete 删除
+    rpc Delete(LbDeleteReq) returns (LbDeleteResp); // casbin:license-lb-delete
+    // Patch 修改
+    rpc Patch(LbPatchReq) returns (LbPatchResp); // casbin:license-lb-patch
+}
+
+
+message LinkBackupLicense {
+    // id
+    int64 id = 1;
+    // 密钥
+    string code = 2;
+    // 客户id
+    int64 customer_id = 3;
+    // 客户名
+    string customer_name = 4;
+    // 机器码id
+    int64 customer_machine_code_id = 5;
+    // 机器码
+    string customer_machine_code = 6;
+    // 创建时间
+    int64 created = 7;
+    // 主模块
+    LinkBackupLicenseKind kind = 8;
+    // 类型
+    LinkBackupLicenseModule module = 9;
+    // 池相关信息
+    LinkBackupPoolLicense pool = 10;
+}
+
+enum LinkBackupLicenseKind {
+    LINK_BACKUP_LICENSE_KIND_UNSPECIFIED = 0;
+    // CDM
+    LINK_BACKUP_LICENSE_KIND_CDM = 1;
+    // data-backup
+    LINK_BACKUP_LICENSE_KIND_DATA_BACKUP = 2;
+    // disaster_management
+    LINK_BACKUP_LICENSE_KIND_DISASTER_MANAGEMENT = 3;
+    // storage-management
+    LINK_BACKUP_LICENSE_KIND_DISASTER_STORAGE_MANAGEMENT = 4;
+
+}
+
+enum LinkBackupLicenseModule {
+    LINK_BACKUP_LICENSE_MODULE_UNSPECIFIED = 0;
+    // Oracle
+    LINK_BACKUP_LICENSE_MODULE_ORACLE = 1;
+    // SqlServer
+    LINK_BACKUP_LICENSE_MODULE_MSSQL = 2;
+    // MySql
+    LINK_BACKUP_LICENSE_MODULE_MYSQL = 3;
+    // File
+    LINK_BACKUP_LICENSE_MODULE_FILE = 4;
+    // PostgresSQL
+    LINK_BACKUP_LICENSE_MODULE_PGSQL = 5;
+    // VMware
+    LINK_BACKUP_LICENSE_MODULE_VMWARE = 6;
+    // Hyper-v
+    LINK_BACKUP_LICENSE_MODULE_HYPER_V = 7;
+    // 池
+    LINK_BACKUP_LICENSE_MODULE_POOL = 8;
+}
+
+enum LinkBackupPoolLicenseLocation {
+    LINK_BACKUP_POOL_LICENSE_LOCATION_UNSPECIFIED = 0;
+    // 本地
+    LINK_BACKUP_POOL_LICENSE_LOCATION_LOCAL = 1;
+    // 云端
+    LINK_BACKUP_POOL_LICENSE_LOCATION_CLOUD = 2;
+}
+
+enum LinkBackupPoolLicenseType {
+    LINK_BACKUP_POOL_LICENSE_TYPE_UNSPECIFIED = 0;
+    // 快照池
+    LINK_BACKUP_POOL_LICENSE_TYPE_SNAPSHOT = 1;
+    // 重删池
+    LINK_BACKUP_POOL_LICENSE_TYPE_DEDUP = 2;
+}
+
+
+// 池授权相关信息
+message LinkBackupPoolLicense {
+    // 池授权大小， 单位GB
+    // @gt:0
+    int64 capacity = 1;
+    // 池类型
+    // @gte:1
+    // @lte:2
+    LinkBackupPoolLicenseType type = 2;
+    // 池位置
+    // @gte:1
+    // @lte:2
+    LinkBackupPoolLicenseLocation location = 3;
+}
+
+message LbListReq {
+    // FIXME 请求字段必须写注释
+    int32 page = 1;
+	int32 size = 2;
+}
+
+message LbListResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+    // 获取结果
+}
+
+message LbGetReq {
+	// FIXME Get req
+	int64 id = 1;
+}
+
+message LbGetResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+    // 获取结果
+}
+
+message LbAddReq {
+    // 机器码id
+    // @gt:0
+    int64 customer_machine_code_id = 1;
+    // 授权时长
+    // @gt:0
+    int64 last = 2;
+    // CDM 需要授权的模块
+    repeated LinkBackupLicenseModule cdm_modules = 3;
+    // 数据备份 data-backup 需要授权的模块
+    repeated LinkBackupLicenseModule data_backup_modules = 4;
+    // 池 需要授权的信息
+    repeated LinkBackupPoolLicense pools = 5;
+}
+
+message LbAddResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+    // 获取结果
+	string data = 3;
+}
+
+message LbDeleteReq {
+    // id
+	int64 id = 1;
+}
+
+message LbDeleteResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+    // 获取结果
+	int64 data = 3;
+}
+
+message LbPatchReq {
+    // FIXME
+}
+
+message LbPatchResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+}

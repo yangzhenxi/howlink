@@ -18,52 +18,48 @@ export const asyncRouterMap = [
       {
         path: '/dashboard',
         name: 'Dashboard',
-        component: () => import('@/views/dashboard'),
-        meta: { title: '首页', keepAlive: true, icon: icon.bxAnaalyse, permission: ['dashboard'] }
-      },
-
-      // CloudDesktop
-      {
-        path: '/CloudDesktop/userManagement',
-        name: 'CloudDesktop',
         component: RouteView,
-        meta: { title: '云桌面', keepAlive: true, icon: icon.CloudDesktop, permission: ['dashboard'] },
+        redirect: { name: 'clientManage' },
+        // component: () => import('@/views/client/ClientManage/index'),
+        meta: { title: '客户管理', keepAlive: true, icon: icon.bxAnaalyse, permission: ['dashboard'] },
         children: [
           {
-            path: '/CloudDesktop/userManagement',
-            name: 'userManagement',
-            component: () => import('@/views/CloudDesktop/userManagement'),
-            meta: { title: '用户管理', keepAlive: true, icon: icon.userManagement, permission: ['user'] }
+            path: '/client/clientManage',
+            name: 'clientManage',
+            component: () => import('@/views/client/ClientManage/index'),
+            meta: { title: '客户管理', keepAlive: true, icon: icon.bxAnaalyse, permission: ['dashboard'] }
           },
           {
-            path: '/CloudDesktop/usergroup',
-            name: 'usergroup',
-            component: () => import('@/views/CloudDesktop/usergroup'),
-            meta: { title: '用户组管理', keepAlive: true, icon: icon.terminalmanage, permission: ['usergroup'] }
-          },
+            path: '/client/Machine',
+            name: 'Machine',
+            component: () => import('@/views/client/Machine/index'),
+            meta: { title: '机器码管理', keepAlive: true, icon: icon.bxAnaalyse, permission: ['dashboard'] }
+          }
+        ]
+      },
+      {
+        path: '/license',
+        name: 'license',
+        component: RouteView,
+        redirect: { name: 'clientManage' },
+        meta: { title: '授权码管理', keepAlive: true, icon: icon.bxAnaalyse, permission: ['dashboard'] },
+        children: [
           {
-            path: '/CloudDesktop/DesktopManagem',
-            name: 'DesktopManagem',
-            component: () => import('@/views/CloudDesktop/DesktopManagem'),
-            // redirect: '/CloudDesktop/DesktopManagem/Allmodules',
-            hideChildrenInMenu: true,
-            meta: { title: '桌面模版管理', keepAlive: true, icon: icon.DesktopManagem, permission: ['template'] }
-          },
-          {
-            path: '/CloudDesktop/cloudDesktopmanage',
-            name: 'cloudDesktopmanage',
-            component: () => import('@/views/CloudDesktop/cloudDesktopmanage'),
-            meta: { title: '云桌面管理', keepAlive: true, icon: icon.cloudDesktopmanage, permission: ['desktop'] }
+            path: '/license/CDM',
+            name: 'CDM',
+            component: () => import('@/views/license/CDM/index'),
+            meta: { title: '灵备授权码', keepAlive: true, icon: icon.bxAnaalyse, permission: ['dashboard'] }
           }
         ]
       },
 
-      // 云桌面架构
-      {
-        path: 'https://192.168.2.221/',
-        name: '云桌面架构',
-        meta: { title: '云桌面架构', icon: icon.cloud, target: '_blank', permission: ['dashboard'] }
-      },
+      // // 云桌面架构
+      // {
+      //   path: '/system/organization',
+      //   name: 'system',
+      //   component: () => import('@/views/client/ClientManage/index'),
+      //   meta: { title: '客户管理', keepAlive: true, icon: icon.bxAnaalyse, permission: ['dashboard'] }
+      // },
       // 系统
       {
         path: '/system/organization',
@@ -106,30 +102,30 @@ export const asyncRouterMap = [
                 }
             ]
           },
+          // {
+          //   path: '/system/Log',
+          //   name: 'Log',
+          //   component: () => import('@/views/system/Log'),
+          //   meta: { title: '用户日志', keepAlive: true, icon: icon.Log, permission: ['log'] }
+          // },
           {
-            path: '/system/Log',
-            name: 'Log',
-            component: () => import('@/views/system/Log'),
-            meta: { title: '用户日志', keepAlive: true, icon: icon.Log, permission: ['log'] }
+            path: '/system/aboutus',
+            name: 'aboutus',
+            component: () => import('@/views/system/aboutus'),
+            meta: { title: '部门管理', keepAlive: true, icon: icon.aboutus, permission: ['dashboard'] }
           },
-        //   {
-        //     path: '/system/aboutus',
-        //     name: 'aboutus',
-        //     component: () => import('@/views/system/aboutus'),
-        //     meta: { title: '关于我们', keepAlive: true, icon: icon.aboutus, permission: ['dashboard'] }
-        //   },
           {
             path: '/system/task',
             name: 'task',
             component: () => import('@/views/system/task'),
             meta: { title: '任务管理', keepAlive: true, icon: icon.task, permission: ['task'] }
-          },
-          {
-            path: '/system/alarm',
-            name: 'alarm',
-            component: () => import('@/views/system/alarm'),
-            meta: { title: '警报管理', keepAlive: true, icon: icon.alarm, permission: ['alert'] }
           }
+          // {
+          //   path: '/system/alarm',
+          //   name: 'alarm',
+          //   component: () => import('@/views/system/alarm'),
+          //   meta: { title: '警报管理', keepAlive: true, icon: icon.alarm, permission: ['alert'] }
+          // }
         //   {
         //     path: '/system/Authorization',
         //     name: 'Authorization',

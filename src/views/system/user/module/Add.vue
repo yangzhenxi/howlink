@@ -65,7 +65,7 @@
 <script>
 import { mixinFormModal } from '@/utils/mixin'
 import { systemUserAdd } from '@/api/system/user'
-import { nameValidator, telValidator, nameRepeatspecialValidator } from '@/utils/validator'
+import { telValidator, nameRepeatspecialValidator } from '@/utils/validator'
 import { debounce } from '@/utils/util'
 
 export default {
@@ -127,7 +127,6 @@ export default {
         { rule, value, callback }
       )
     }),
-    nameValidator,
     telValidator
   }
 }

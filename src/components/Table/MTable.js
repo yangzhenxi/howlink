@@ -55,7 +55,8 @@ export default {
         current: this.pageNum,
         pageSize: this.pageSize,
         showSizeChanger: this.showSizeChanger,
-        showTotal: true
+        showTotal: true,
+        pageSizeOptions: ['5', '10', '20', '50']
       }) || false
       this.parameter = {
         current: 1,
@@ -104,6 +105,7 @@ export default {
               current: this.parameter.current,
               pageSize: this.parameter.pageSize,
               total: r.data.length,
+              pageSizeOptions: ['5', '10', '20', '50'],
               showTotal: total => `共 ${total} 条数据`
             }) || false
             this.localDataSource = this.calculate(this.parameter)

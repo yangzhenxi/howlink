@@ -1,14 +1,8 @@
-import desktopManage from './CloudDesktop/desktopManagem'
-import usergroup from './CloudDesktop/usergroup'
-import userManagement from './CloudDesktop/userManagement'
-import CloudDesktop from './CloudDesktop/CloudDesktop'
 import Alart from './system/alarm'
 import Task from './system/task'
+import CDM from './license//CDM'
 export default {
-    ...desktopManage,
-    ...usergroup,
-    ...userManagement,
-    ...CloudDesktop,
     ...Alart,
-    ...Task
+    ...Task,
+    ...CDM
 }

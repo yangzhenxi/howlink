@@ -1,13 +1,22 @@
-import { CloudDesktopTestName } from '@/api/CloudDesktop/CloudDesktop'
-import { deepGet } from '@/utils/util'
 /**
  * 名称验证
  *  @param {*} 验证参数
  */
-export function nameValidator (rule, value, callback) {
-    const pattern = /^[a-zA-Z0-9,./;'[\]!@#$%^&*()_+-=/`]*$/
+export function codeValidator (rule, value, callback) {
+    const pattern = /^[0-9a-fA-F]{8}(-[0-9a-f]{4}){3}-[0-9a-fA-f]{12}$/
     if (!pattern.test(value)) {
-        callback(new Error('名称必须由字母、数字和英文符号组成！'))
+        callback(new Error('请输入正确的uuid!'))
+    }
+    callback()
+}
+/**
+ * 数字校验
+ *  @param {*} 验证参数
+ */
+export function numberValidator (rule, value, callback) {
+    const pattern = /^[0-9]*$/
+    if (!pattern.test(value)) {
+        callback(new Error('请输入数字!'))
     }
     callback()
 }
@@ -125,36 +134,6 @@ export async function nameRepeatspecialValidator ({ data, message = '名称已�
     }
     callback()
   }
-
-/**
- *  添加云桌面桌面名称校验
- *  @param {*} 验证参数
- */
-export async function DesktopnameValidator ({ data, message = '名称已存在，请重新输入！', initialValue, field = 'name' }, { rule, value, callback }) {
-    try {
-      if (initialValue && value === initialValue) {
-        callback()
-      }
-      const patterns = /^[^\s]*$/
-      if (!patterns.test(value)) {
-          callback(new Error('名称不能带空格！'))
-          return false
-      }
-      const pattern = /^[\u4e00-\u9fa5a-zA-Z][\u4e00-\u9fa5a-zA-Z0-9]{0,12}$/
-      if (!pattern.test(value)) {
-          callback(new Error('名称不能有特殊字符，且不能数字开头,长度在1-13个字符以内'))
-          return false
-      }
-      const result = deepGet(await CloudDesktopTestName({ 'name': value }), 'data')
-      if (!result) {
-          callback(new Error('名称已存在，请重新输入'))
-          return false
-      }
-    } catch (error) {
-      callback()
-    }
-    callback()
-}
 /**
  * Tree操作的校验 不区分大小写
  *  @param {*} 验证参数

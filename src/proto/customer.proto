@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package customer.v1;
+
+option go_package="rpc/customer/v1;customer_v1";
+
+// protoc --go_out=. --twirp_out=option_prefix=casbin,validate_enable=true:. rpc/system/v1/customer.proto
+// 客户相关接口
+service Customer {
+    // List 获取列表
+    rpc List(CustomerListReq) returns (CustomerListResp); // casbin:customer-customer-list
+	// Add 添加
+    rpc Add(CustomerAddReq) returns (CustomerAddResp);  // casbin:customer-customer-add
+    // Delete 删除
+    rpc Delete(CustomerDeleteReq) returns (CustomerDeleteResp); // casbin:customer-customer-delete
+    // Patch 修改
+    rpc Patch(CustomerPatchReq) returns (CustomerPatchResp); // casbin:customer-customer-patch
+}
+
+
+message C {
+    // 名称
+    string name = 1;
+    // 地址
+    string address = 2;
+    // 添加时间
+    int64 created = 3;
+    // 更新时间
+    int64 updated = 4;
+}
+
+message CustomerListReq {
+    int32 page = 1;
+	int32 size = 2;
+}
+
+message CustomerListResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+    // 获取结果
+    repeated C customers = 3;
+}
+
+message CustomerGetReq {
+    // @gt:0
+	int64 id = 1;
+}
+
+message CustomerGetResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+}
+
+message CustomerAddReq {
+    // 名称
+    // @min_len:1
+    string name = 1;
+    // 地址
+    string address = 2;
+}
+
+message CustomerAddResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+    // 获取结果
+	int64 data = 3;
+}
+
+message CustomerDeleteReq {
+    // id
+    // @gt:0
+	int64 id = 1;
+}
+
+message CustomerDeleteResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+}
+
+message CustomerPatchReq {
+    // id
+    // @gt:0
+    int64 id = 1;
+    // 名称
+    // @min_len:1
+    string name = 2;
+    // 地址
+    string address = 3;
+}
+
+message CustomerPatchResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+}

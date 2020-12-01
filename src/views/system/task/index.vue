@@ -74,7 +74,7 @@
 </template>
 <script>
 import { MIcon, STable } from '@/components'
-import { CloudDesktopTaskList, CloudDesktopTaskGet } from '@/api/CloudDesktop/CloudDesktop'
+// import { CloudDesktopTaskList, CloudDesktopTaskGet } from '@/api/CloudDesktop/CloudDesktop'
 import { mixinTable } from '@/utils/mixin'
 const columns = [
     {
@@ -139,7 +139,8 @@ export default {
         },
         loadData: async (parameter) => {
         try {
-            const result = await CloudDesktopTaskList(Object.assign(parameter, this.queryBuild(this.queryParam)))
+          const result = []
+            // const result = await CloudDesktopTaskList(Object.assign(parameter, this.queryBuild(this.queryParam)))
             return result
         } catch (error) {
             return false
@@ -149,8 +150,8 @@ export default {
   },
   methods: {
     async Detali (record) {
-        const result = this.deepGet(await CloudDesktopTaskGet({ id: record.id }), 'data')
-        this.Drawerdata = result
+        // const result = this.deepGet(await CloudDesktopTaskGet({ id: record.id }), 'data')
+        this.Drawerdata = []
         this.visible = true
     },
     onClose () {

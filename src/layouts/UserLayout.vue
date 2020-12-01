@@ -5,7 +5,7 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.png" class="logo" alt="logo">
-            <span class="title">豪联HLCloud系统</span>
+            <span class="title">豪联授权码系统</span>
           </a>
         </div>
         <div class="desc">

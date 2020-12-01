@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package customer.v1;
+
+option go_package="rpc/customer/v1;customer_v1";
+
+// protoc --go_out=. --twirp_out=option_prefix=casbin,validate_enable=true:. rpc/system/v1/code.proto
+// 机器码的相关接口
+service Code {
+    // 这里的行尾注释 casbin:rule 用于验证接口权限格式为module-object-action(模块-对象-操作)
+    // List 获取列表
+    rpc List(CodeListReq) returns (CodeListResp); // casbin:customer-code-list
+	// Get 获取详情
+    rpc Get(CodeGetReq) returns (CodeGetResp); // casbin:customer-code-get
+	// Add 添加
+    rpc Add(CodeAddReq) returns (CodeAddResp);  // casbin:customer-code-add
+    // Delete 删除
+    rpc Delete(CodeDeleteReq) returns (CodeDeleteResp); // casbin:customer-code-delete
+    // Patch 修改
+    rpc Patch(CodePatchReq) returns (CodePatchResp); // casbin:customer-code-patch
+}
+
+message MachineCode {
+    // id
+    int64 id = 1;
+    // 机器名
+    string name = 2;
+    // 机器码
+    string code = 3;
+    // 创建时间
+    int64 created = 4;
+    // 客户id
+    int64 customer_id = 5;
+    // 客户名
+    string customer_name = 6;
+}
+
+message CodeListReq {
+    int32 page = 1;
+	int32 size = 2;
+}
+
+message CodeListResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+    // 获取结果
+    repeated MachineCode data = 3;
+}
+
+message CodeGetReq {
+	// FIXME Get req
+	int64 id = 1;
+}
+
+message CodeGetResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+    // 获取结果
+}
+
+message CodeAddReq {
+    // 客户id
+    // @gt:0
+    int64 customer_id = 1;
+    // 机器名
+    string name = 2;
+    // 机器码
+    // @pattern:"[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+    string code = 3;
+}
+
+message CodeAddResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+    // 获取结果
+	int64 data = 3;
+}
+
+message CodeDeleteReq {
+    // id
+	int64 id = 1;
+}
+
+message CodeDeleteResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+    // 获取结果
+	int64 data = 3;
+}
+
+message CodePatchReq {
+    // FIXME
+}
+
+message CodePatchResp {
+	// 响应码[机读]
+    int32 code = 1;
+    // 返回信息，人读
+    string msg = 2;
+}
